@@ -1,0 +1,4 @@
+# kickstart travis.
+language: java
+
+install: mvn clean -U install
