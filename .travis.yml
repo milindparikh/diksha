@@ -1,4 +1,4 @@
 # kickstart travis.
 language: java
 
-install: mvn package
+install: ./build.sh
