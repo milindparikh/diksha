@@ -25,6 +25,10 @@ import com.amazonaws.services.simpleworkflow.flow.generic.TerminateWorkflowExecu
 import com.amazonaws.services.simpleworkflow.flow.worker.GenericWorkflowClientExternalImpl;
 import com.amazonaws.services.simpleworkflow.model.ActivityTask;
 import com.amazonaws.services.simpleworkflow.model.WorkflowExecution;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.lambda.AWSLambdaClient;
@@ -32,54 +36,51 @@ import com.amazonaws.services.lambda.model.InvokeRequest;
 
 public class SchedulerActivitiesImpl implements SchedulerActivities {
 
+	private static final Logger logger = LogManager.getLogger(SchedulerActivitiesImpl.class);
 
 	@Override
 	public void runPeriodicActivity(String functionName, String functionContext) {
-		
-		ActivityExecutionContextProvider provider
-	    = new ActivityExecutionContextProviderImpl();
-	ActivityExecutionContext aec = provider.getActivityExecutionContext();
-	//	System.out.println("NOw invoking lambda");
 
+		ActivityExecutionContextProvider provider = new ActivityExecutionContextProviderImpl();
+		ActivityExecutionContext aec = provider.getActivityExecutionContext();
+		// System.out.println("NOw invoking lambda");
 
 		String swfAccessId = System.getenv("AWS_ACCESS_KEY_ID");
 		String swfSecretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
 		AWSCredentials awsCredentials = new BasicAWSCredentials(swfAccessId, swfSecretKey);
-		
+
 		AWSLambdaClient alc = new AWSLambdaClient(awsCredentials);
 		InvokeRequest invokeRequest = new InvokeRequest();
-		
-		System.out.println("invoking function " + functionName + " for executionId " + aec.getWorkflowExecution().getWorkflowId() );
+
+		logger.info(
+				"invoking function " + functionName + " for executionId " + aec.getWorkflowExecution().getWorkflowId());
 		invokeRequest.setFunctionName(functionName);
 		invokeRequest.setInvocationType("Event");
 		invokeRequest.setClientContext(functionContext);
 		alc.invoke(invokeRequest);
-		
+
 	}
 
 	@Override
 	public void terminateScheduler() {
 
-		System.out.println("terminated...1");
+		logger.info("Started terminate process");
 
 		try {
-		ActivityExecutionContextProvider provider
-        = new ActivityExecutionContextProviderImpl();
-        ActivityExecutionContext aec = provider.getActivityExecutionContext();
-		
-    	ActivityTask at = aec.getTask();
-    	WorkflowExecution we  = at.getWorkflowExecution();
-    	
-    	
-    	
-		GenericWorkflowClientExternal gwcei = new GenericWorkflowClientExternalImpl(aec.getService(), aec.getDomain());
-		TerminateWorkflowExecutionParameters terminateParameters = new TerminateWorkflowExecutionParameters(we, com.amazonaws.services.simpleworkflow.model.ChildPolicy.TERMINATE, "limits", "limits");
-		gwcei.terminateWorkflowExecution(terminateParameters);
-		System.out.println("terminated workflow");
-		}
-		catch(Exception e) {
-			System.out.println("terminated workflow..2");
+			ActivityExecutionContextProvider provider = new ActivityExecutionContextProviderImpl();
+			ActivityExecutionContext aec = provider.getActivityExecutionContext();
 
+			ActivityTask at = aec.getTask();
+			WorkflowExecution we = at.getWorkflowExecution();
+
+			GenericWorkflowClientExternal gwcei = new GenericWorkflowClientExternalImpl(aec.getService(),
+					aec.getDomain());
+			TerminateWorkflowExecutionParameters terminateParameters = new TerminateWorkflowExecutionParameters(we,
+					com.amazonaws.services.simpleworkflow.model.ChildPolicy.TERMINATE, "limits", "limits");
+			gwcei.terminateWorkflowExecution(terminateParameters);
+			logger.info("Terminated");
+		} catch (Exception e) {
+			logger.error("Terminate was not successful because of " + e.getMessage());
 		}
 	}
 
