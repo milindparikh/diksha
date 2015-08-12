@@ -51,7 +51,7 @@ public class SchedulerActivitiesImpl implements SchedulerActivities {
 
 		AWSLambdaClient alc = new AWSLambdaClient(awsCredentials);
 		InvokeRequest invokeRequest = new InvokeRequest();
-
+		System.out.println("invoking function " + functionName + " for executionId " + aec.getWorkflowExecution().getWorkflowId());
 		logger.info(
 				"invoking function " + functionName + " for executionId " + aec.getWorkflowExecution().getWorkflowId());
 		invokeRequest.setFunctionName(functionName);
