@@ -61,11 +61,11 @@ Step 2: Set AWS credentials as environment variable.
 export AWS_ACCESS_KEY_ID=YOURKEYID
 export AWS_SECRET_ACCESS_KEY=YOURKEY
 ```
-Step 3: Initialize client. Either build your own diksha-client jar or you can download latest release. Here we are using default configuration, but diksha client also lets you configure as per your need, check all available options using -h option. 
+Step 3: Initialize client. Either build your own diksha-client jar or you can download [latest release](https://github.com/milindparikh/diksha/releases/download/diksha-0.0.1/diksha-client-0.0.1.jar). Here we are using default configuration, but diksha client also lets you configure as per your need, check all available options using -h option. 
 ```
 java -jar scheduler-client-0.0.1.jar -adminit
 ```
-Step 4: Run diksha engine. Either build your own diksha-engine jar or you can download latest release. You can run this either on local machine or any EC2 instance. By default it will use configuration "cf1". If you had user defined configuration you can use by specifying -lcfg yourconfiguration
+Step 4: Run diksha engine. Either build your own diksha-engine jar or you can download [latest release](https://github.com/milindparikh/diksha/releases/download/diksha-0.0.1/diksha-engine-0.0.1.jar). You can run this either on local machine or any EC2 instance. By default it will use configuration "cf1". If you had user defined configuration you can use by specifying -lcfg your configuration
 ```
 java -jar diksha-engine-0.0.1.jar 
 ```
