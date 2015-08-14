@@ -17,13 +17,14 @@ Diksha is is scalable scheduler that can be used to scheduler [AWS lambda](https
 #### Components:
  * Diksha Client - It is used to:
     * Configure settings in AWS SWF and DynamoDB
-    * Create policy for different diksha roles  -
+    * Create IAM policy for different diksha roles  -
        * Admin - Creates intial configuration (DynamoDB tables, policies, and SWF Domain)
        * Designer - Creates function alias and jobs
        * User - Executes jobs, list status of job, view history of job and cancels job
      * Create function alias, create, execute and cancel jobs
      * List status and history of job execution
-* Diksha Engine - You can use diksha engine anywhere and it will trigger AWS Lambda function as per scheduled jobs. You just need to specify configuration (default configuration is "cf1") and it will pick jobs as per their schedule.
+     * Help for all available option are available in -h option
+ * Diksha Engine - You can use diksha engine anywhere and it will trigger AWS Lambda function as per scheduled jobs. You just need to specify configuration (default configuration is "cf1") and it will pick jobs as per their schedule.
 
 ####  Getting Started
 Step 1: Make sure AWS Account that you are going to use has following policy (Update account number with your own account number)
